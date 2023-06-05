@@ -1,0 +1,75 @@
+<script>
+    export let handedness = "left";
+    export let sequence = "41324";
+    export let onTime = 30;
+    export let offTime = 30;
+    export let blockCount = 12;
+
+    import InstructionsPage from './InstructionsPage.svelte';
+    import Countdown from './Countdown.svelte';
+    import MSTTrial from './MSTTrial.svelte';
+    import ThanksBye from './ThanksBye.svelte';
+    import { range } from './utils.js';
+
+    let instructionsPagesDone = 0;
+    function instructionsPageDone() {
+       instructionsPagesDone++;
+    }
+
+    $: countdownSeconds = (currentBlock>1)?30:10;
+    let isCountdownDone = false;
+    function countdownDone() {
+        isCountdownDone = true;
+    }
+
+    let currentBlock = 1;
+    function blockDone() {
+       ++currentBlock;
+       isCountdownDone = false;
+    }
+
+</script>
+
+{#if instructionsPagesDone < 3}
+  <InstructionsPage done={instructionsPageDone} minMilliseconds={10}
+           requiredKeyPattern={instructionsPagesDone+1}>
+     <p>
+        Place the fingers of your {handedness} hand on the 1, 2, 3, and 4 keys
+        at the top of your keyboard.
+     </p>
+     {#if instructionsPagesDone > 0}
+         <p>
+             You will be shown a string of {sequence.length} digits, {sequence}, and the
+             computer will start counting down until you start.
+             Once the countdown has completed and the screen turns green,
+             type {sequence} over and over as quickly and accurately as possible.
+             You will have {onTime} seconds to type {sequence} as many times as possible.
+         </p>
+         {#if instructionsPagesDone > 1} 
+             <p> 
+                 Stop when the screen turns red again.
+                 You will get {offTime} seconds to rest before the next trial.
+                 There will be {blockCount} trials in all.
+             </p>
+         {/if}
+     {/if}
+  </InstructionsPage>
+{:else if (currentBlock <= blockCount)}
+    {#each range(1, blockCount, 1) as blockIndex}
+        {#if (blockIndex == currentBlock)}
+           {#if (!isCountdownDone) }
+             <Countdown {countdownSeconds} done={countdownDone}/>
+           {:else}
+             <MSTTrial done={blockDone} />
+           {/if}
+        {/if}
+    {/each}
+{:else}
+   <ThanksBye />
+{/if}
+
+<style>
+
+
+
+</style>
