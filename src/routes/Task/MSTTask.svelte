@@ -1,4 +1,5 @@
 <script>
+    export let running = true;
     export let handedness = "left";
     export let sequence = "41324";
     export let onTime = 30;
@@ -30,7 +31,8 @@
 
 </script>
 
-{#if instructionsPagesDone < 3}
+{#if running}
+ {#if instructionsPagesDone < 3}
   <InstructionsPage done={instructionsPageDone} minMilliseconds={10}
            requiredKeyPattern={instructionsPagesDone+1}>
      <p>
@@ -54,7 +56,7 @@
          {/if}
      {/if}
   </InstructionsPage>
-{:else if (currentBlock <= blockCount)}
+  {:else if (currentBlock <= blockCount)}
     {#each range(1, blockCount, 1) as blockIndex}
         {#if (blockIndex == currentBlock)}
            {#if (!isCountdownDone) }
@@ -64,8 +66,11 @@
            {/if}
         {/if}
     {/each}
-{:else}
+ {:else}
    <ThanksBye />
+ {/if}
+{:else}
+  <em>task paused</em>
 {/if}
 
 <style>
