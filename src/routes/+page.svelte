@@ -22,7 +22,6 @@
 
 <!--
 
-* detect loss of full-screen in task
 * font sizes relative to screen size
 * center strings on appropriate point
 * exit task when done

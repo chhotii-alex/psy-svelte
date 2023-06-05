@@ -3,6 +3,7 @@
     export let done;
     export let maxDots = 12;
     export let sequence = "41324";
+    export let blockNumber;
 
     import { onInterval, range } from './utils.js';
 

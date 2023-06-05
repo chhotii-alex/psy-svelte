@@ -7,8 +7,7 @@
     export let blockCount = 12;
 
     import InstructionsPage from './InstructionsPage.svelte';
-    import Countdown from './Countdown.svelte';
-    import MSTTrial from './MSTTrial.svelte';
+    import MSTBlock from './MSTBlock.svelte';
     import ThanksBye from './ThanksBye.svelte';
     import { range } from './utils.js';
 
@@ -18,17 +17,11 @@
     }
 
     $: countdownSeconds = (currentBlock>1)?30:10;
-    let isCountdownDone = false;
-    function countdownDone() {
-        isCountdownDone = true;
-    }
 
     let currentBlock = 1;
     function blockDone() {
        ++currentBlock;
-       isCountdownDone = false;
     }
-
 </script>
 
 {#if running}
@@ -59,11 +52,8 @@
   {:else if (currentBlock <= blockCount)}
     {#each range(1, blockCount, 1) as blockIndex}
         {#if (blockIndex == currentBlock)}
-           {#if (!isCountdownDone) }
-             <Countdown {countdownSeconds} done={countdownDone}/>
-           {:else}
-             <MSTTrial done={blockDone} />
-           {/if}
+           <MSTBlock countdownSeconds={countdownSeconds} done={blockDone}
+              blockNumber={currentBlock} />
         {/if}
     {/each}
  {:else}
