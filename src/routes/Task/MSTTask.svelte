@@ -12,6 +12,8 @@
     import ThanksBye from './ThanksBye.svelte';
     import { range } from './utils.js';
 
+    let beep;
+
     let instructionsPagesDone = 0;
     function instructionsPageDone() {
        instructionsPagesDone++;
@@ -38,6 +40,8 @@
 
     $: isMidTask = isTaskStarted(instructionsPagesDone) && !isEnoughTaskDone(currentBlock);
 </script>
+
+<audio src='beep.mp3' id='mstbeep' preload='auto' bind:this={beep} />
 
 {#if running}
  {#if instructionsPagesDone < 3}
@@ -68,7 +72,7 @@
     {#each range(1, blockCount, 1) as blockIndex}
         {#if (blockIndex == currentBlock)}
            <MSTBlock countdownSeconds={countdownSeconds} done={blockDone}
-              blockNumber={currentBlock} />
+              blockNumber={currentBlock} beep={beep} />
         {/if}
     {/each}
  {:else}

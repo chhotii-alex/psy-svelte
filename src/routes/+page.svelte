@@ -17,17 +17,13 @@
    <h1 slot="no_fullscreen_support" >
       I'm sorry, you cannot use this browser for the task.
    </h1>
-   <MSTTask running={isFull} />
+   <MSTTask running={isFull} done={exitFullscreen} />
 </Fullscreen>
 
 <!--
 
-* font sizes relative to screen size
-* center strings on appropriate point
-* exit task when done
 * save data
 * typingWarningLevel
-* beep for last seconds of countdown
 
 -->
 

@@ -5,6 +5,7 @@
     export let done;
     export let countdownSeconds = 30;
     export let blockNumber;
+    export let beep;
 
     let isCountdownDone = false;
     function countdownDone() {
@@ -14,7 +15,7 @@
 
 
 {#if (!isCountdownDone) }        
-    <Countdown {countdownSeconds} done={countdownDone}/>
+    <Countdown {countdownSeconds} done={countdownDone} beep={beep} />
 {:else}
      <MSTTrial {done} {blockNumber} />
 {/if}
