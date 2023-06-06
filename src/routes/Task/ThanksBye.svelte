@@ -22,10 +22,10 @@
 
 {#if width}
   <svg>
-    <text fill="yellow" x={width/2} y={height/2} >
+    <text fill="yellow" x={width/2} y={height/2} text-anchor="middle" >
        Thank you!
     </text>
-    <text fill="yellow" x={width/2} y={height/4} >
+    <text fill="yellow" x={width/2} y={height/4} text-anchor="middle" >
        Hit the Escape key to exit.
     </text>
   </svg>
@@ -36,8 +36,6 @@
 <style>
 
 div {
-   font: 20px Arial;
-   width: 100%;
    height: 100%;
    background-color: black;
    padding: 0px;
@@ -45,6 +43,7 @@ div {
 
 text {
   font-family: Arial;
+  font-size: 5vw;
 }
 
 svg {

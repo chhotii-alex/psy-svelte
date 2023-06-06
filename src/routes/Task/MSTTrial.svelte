@@ -41,9 +41,9 @@
 
 {#if dotWidth}
   <svg>
-    <text fill="white" x={width/2} y={height/3} >
-        {sequence}
-    </text>
+      <text fill="white" x={width/2} y={height/4} text-anchor="middle" >
+         {sequence}
+      </text>
     {#each range(0, nDots-1, 1) as i}
       <circle cx={(i+0.5)*dotWidth} cy={ height/2 } r={ (dotWidth/2-4) } fill="white" /> 
     {/each}
@@ -55,15 +55,9 @@
 <style>
 
 div {
-   font: 20px Arial;
-   width: 100%;
    height: 100%;
    background-color: green;
    padding: 0px;
-}
-
-text {
-  font-family: Arial;
 }
 
 svg {
@@ -71,5 +65,9 @@ svg {
    height: 100%;
 }
 
+text {
+  font-family: Arial;
+  font-size: 5vw;
+}
 
 </style>

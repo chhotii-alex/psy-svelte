@@ -49,7 +49,7 @@
 
 div {
    font-family: Arial;
-   width: 100%;
+   font-size: 3vw;
    height: 100%;
    background-color: black;
    color: white;

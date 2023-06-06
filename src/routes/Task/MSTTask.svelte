@@ -1,5 +1,6 @@
 <script>
     export let running = true;
+    export let done;
     export let handedness = "left";
     export let sequence = "41324";
     export let onTime = 30;
@@ -22,6 +23,20 @@
     function blockDone() {
        ++currentBlock;
     }
+
+    function taskDone() {
+      done();
+    }
+
+    function isTaskStarted(instructionsPagesDone) {
+       return (instructionsPagesDone > 0);
+    }
+
+    function isEnoughTaskDone(currentBlock) {
+       return (currentBlock >= blockCount);
+    }
+
+    $: isMidTask = isTaskStarted(instructionsPagesDone) && !isEnoughTaskDone(currentBlock);
 </script>
 
 {#if running}
@@ -57,10 +72,12 @@
         {/if}
     {/each}
  {:else}
-   <ThanksBye />
+   <ThanksBye done={taskDone} />
  {/if}
 {:else}
-  <em>task paused</em>
+  {#if isMidTask }
+    <em>task paused</em>
+  {/if}
 {/if}
 
 <style>

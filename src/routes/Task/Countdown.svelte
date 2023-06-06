@@ -59,11 +59,11 @@
 <div bind:clientWidth={width} bind:clientHeight={height} >
   {#if width }
     <svg>
-      <text fill="white" x={width/2} y={height/4} >
+      <text fill="white" x={width/2} y={height/4} text-anchor="middle" >
          {sequence}
       </text>
       {#if countdownSecondsRemaining > 0}
-         <text fill="white" x={width/2} y={height/2} >
+         <text fill="white" x={width/2} y={height/2} text-anchor="middle" >
            {numberWords[countdownSecondsRemaining]}
          </text>
       {/if}
@@ -74,11 +74,9 @@
 <style>
 
 div {
-   width: 100%;
    height: 100%;
    background-color: red;
    color: white;
-   padding: 45px;
 }
 
 svg {
@@ -88,6 +86,7 @@ svg {
 
 text {
   font-family: Arial;
+  font-size: 5vw;
 }
 
 </style>
