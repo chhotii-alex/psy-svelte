@@ -8,6 +8,7 @@
 
     export let done;
     export let countdownSeconds = 30;
+    export let onSeconds = 30;
     export let blockNumber;
     export let beep;
     export let sessionId;
@@ -32,7 +33,7 @@
      {#await promise}
         <Blank color={"red"} />
      {:then trialId}
-        <MSTTrial {done} {blockNumber} trialId={trialId['id']} />
+        <MSTTrial seconds={onSeconds} {done} {blockNumber} trialId={trialId['id']} />
      {:catch error}
         <em> ERROR: {error.message} </em>
      {/await}
