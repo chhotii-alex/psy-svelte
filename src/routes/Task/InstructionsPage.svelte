@@ -14,7 +14,7 @@
 
     let tickTock = 0;
 
-    onInterval( () => tickTock++, minMilliseconds);
+    onInterval( () => { tickTock++ }, minMilliseconds);
 
     function minTimeElapsed(anyUpdatedVarable) {
        let now = new Date();
@@ -27,7 +27,7 @@
     function handleKeydown(event) {
        if (event.key == requiredKeyPattern) {
           if (hasMinTimeElapsed) {
-             done();
+             done(event.timeStamp);
           }
        }
     }

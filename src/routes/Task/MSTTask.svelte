@@ -6,17 +6,25 @@
     export let onTime = 30;
     export let offTime = 30;
     export let blockCount = 12;
+    export let sessionId;
 
     import InstructionsPage from './InstructionsPage.svelte';
+    import Blank from './Blank.svelte';
     import MSTBlock from './MSTBlock.svelte';
     import ThanksBye from './ThanksBye.svelte';
     import { range } from './utils.js';
+    import { setTimestamp } from '../db.js';
 
     let beep;
 
+    let savePromise;
     let instructionsPagesDone = 0;
-    function instructionsPageDone() {
+    function instructionsPageDone(timestamp) {
        instructionsPagesDone++;
+       if (instructionsPagesDone == 3) {
+         // This returns a Promise. It's async.
+         savePromise = setTimestamp(sessionId, timestamp);
+       }
     }
 
     $: countdownSeconds = (currentBlock>1)?30:10;
@@ -39,13 +47,14 @@
     }
 
     $: isMidTask = isTaskStarted(instructionsPagesDone) && !isEnoughTaskDone(currentBlock);
+
 </script>
 
 <audio src='beep.mp3' id='mstbeep' preload='auto' bind:this={beep} />
 
 {#if running}
  {#if instructionsPagesDone < 3}
-  <InstructionsPage done={instructionsPageDone} minMilliseconds={10}
+  <InstructionsPage done={instructionsPageDone} minMilliseconds={1000}
            requiredKeyPattern={instructionsPagesDone+1}>
      <p>
         Place the fingers of your {handedness} hand on the 1, 2, 3, and 4 keys
@@ -69,12 +78,22 @@
      {/if}
   </InstructionsPage>
   {:else if (currentBlock <= blockCount)}
-    {#each range(1, blockCount, 1) as blockIndex}
-        {#if (blockIndex == currentBlock)}
-           <MSTBlock countdownSeconds={countdownSeconds} done={blockDone}
-              blockNumber={currentBlock} beep={beep} />
-        {/if}
-    {/each}
+    {#await savePromise}
+       <Blank color="red" />
+    {:then saveDone}
+        {#each range(1, blockCount, 1) as blockIndex}
+            {#if (blockIndex == currentBlock)}
+               <MSTBlock countdownSeconds={countdownSeconds} done={blockDone}
+                  sessionId={sessionId}
+                  blockNumber={currentBlock} beep={beep} />
+            {/if}
+        {/each}
+    {:catch error}
+       <em>An error occurred.
+       Please exit the task by hitting the Esc key,
+       and notify study staff.
+       </em>
+    {/await}
  {:else}
    <ThanksBye done={taskDone} />
  {/if}

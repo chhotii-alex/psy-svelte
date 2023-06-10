@@ -1,37 +1,69 @@
 <script>
-    import Fullscreen from './Fullscreen.svelte';
-    import MSTTask from './Task/MSTTask.svelte';
+    import TaskContainer from './TaskContainer.svelte'
+    import { validateAccessToken, getSessionId } from './db.js';
 
-    let height;
+    let accessToken = "";
+    $: accessTokenLongEnough = (accessToken && accessToken.trim().length >= 3);
+
+    $: validateTokenPromise = validateAccessToken(accessTokenLongEnough, accessToken);
+
+    function initiateTask() {
+        taskGoPromise = getSessionId(accessToken);
+    }
+
+    let taskGoPromise;
+
 </script>
 
-<Fullscreen let:isFull={isFull} let:requestFullscreen={requestFullscreen}
-    let:exitFullscreen={exitFullscreen} >
-  <p slot="if_fullscreen_support" >
-       <button on:click={requestFullscreen}>
-           Click to full-screen
-       </button>
-   </p>
-   <div slot="already_fullscreen" >
-   </div>
-   <h1 slot="no_fullscreen_support" >
-      I'm sorry, you cannot use this browser for the task.
+{#if !taskGoPromise}
+   <h1>
+       Welcome to the Manoach Lab Task Portal!
    </h1>
-   <MSTTask running={isFull} done={exitFullscreen} />
-</Fullscreen>
+   Please enter your access token:
+   <input bind:value={accessToken} />
+   {#if (accessTokenLongEnough && validateTokenPromise) }
+      {#await validateTokenPromise}
+         <em>validating...</em>
+      {:then isTokenValid}
+         {#if isTokenValid}
+            <button on:click={initiateTask} >
+                Click to start the task!
+            </button>
+          {:else}
+               That is not a valid access token.
+           {/if}
+       {:catch error}
+           <p class="error" >
+               Error validating token: {error.message}
+           </p>
+      {/await}
+   {/if}
+
+{:else} <!-- taskGoPromise created -->
+    {#await taskGoPromise}
+        Waiting for the go-ahead...
+    {:then session_info}
+        <TaskContainer sessionId={session_info["id"]} />
+    {:catch error}
+        <p class="error" >
+                Glitch! Error code 102. {error.message}
+         </p>
+    {/await}
+{/if}
 
 <!--
 
-* save data
+* explicitly don't save keystrokes outside green period
+* can at least start countdown w/ save promises unresolved
+* data lost if Esc?
+* exponential back-off
+* save data: test with simulation of flaky server connection
 * typingWarningLevel
+* filter out repeat keystrokes
+* output classic spreadsheet format report
+* email DM about issues
+* code refactoring
+* to-do's from old Cat Chu code
 
 -->
 
-<style>
-
-div {
-    width: 100vw;
-    height: 100vh;
-}
-
-</style>
