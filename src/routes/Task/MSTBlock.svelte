@@ -1,6 +1,8 @@
 <script>
     import { onMount } from 'svelte';
 
+    import ErrorMessage from './ErrorMessage.svelte';
+    import SavingMessage from './SavingMessage.svelte';
     import Countdown from './Countdown.svelte';
     import Blank from './Blank.svelte';
     import MSTTrial from './MSTTrial.svelte';
@@ -34,19 +36,15 @@
             <MSTTrial {promiseHolder} {blockNumber} trialId={trialId['id']} />
         {:then timerDoneness}
            {#await promiseHolder['savePromises']}
-               <em>saving...</em>
+               <SavingMessage />
            {:then savesDone}
                 <Function func={done} />
            {:catch error}
-             <em>
-                An error has occurred.
-                 Please hit the Esc key to exit the task,
-                 and notify study staff.
-             </em>
+             <ErrorMessage message={`Could not save data: ${error.message}`} />
            {/await}
         {/await}
      {:catch error}
-        <em> ERROR: {error.message} </em>
+        <ErrorMessage message={error.message} />
      {/await}
 {/await}
 

@@ -46,8 +46,14 @@
        }
     }
 
+    function backoff(millis) {
+       const jitter = Math.floor(Math.random() * millis)
+       return millis*2 - jitter;
+    }
+
     async function saveKeystrokes(receiptId, keys) {
       if (!keys.length) return receiptId;
+      let retryInterval = 1;
       for (let attemptCount = 0; attemptCount < 25; ++attemptCount) {
          console.log(receiptId, attemptCount);
          try {
@@ -60,9 +66,12 @@
             }
          }
          catch (error) {
+           console.log("Caught error for:", receiptId);
            console.log(error);
          }  // keep trying
-         await waitSec(5);  // pause before re-attempt
+         retryInterval = backoff(retryInterval);
+         console.log(`Try interval for ${receiptId}: ${retryInterval}`);
+         await wait(retryInterval);  // pause before re-attempt
       }
       // If we got here, no success, even though we tried and tried
       throw new Error("Could not save data.");

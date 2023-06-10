@@ -8,6 +8,8 @@
     export let blockCount = 12;
     export let sessionId;
 
+    import ErrorMessage from './ErrorMessage.svelte';
+    import SavingMessage from './SavingMessage.svelte';
     import InstructionsPage from './InstructionsPage.svelte';
     import Blank from './Blank.svelte';
     import MSTBlock from './MSTBlock.svelte';
@@ -79,7 +81,7 @@
   </InstructionsPage>
   {:else if (currentBlock <= blockCount)}
     {#await savePromise}
-       <Blank color="red" />
+       <SavingMessage />
     {:then saveDone}
         {#each range(1, blockCount, 1) as blockIndex}
             {#if (blockIndex == currentBlock)}
@@ -89,10 +91,7 @@
             {/if}
         {/each}
     {:catch error}
-       <em>An error occurred.
-       Please exit the task by hitting the Esc key,
-       and notify study staff.
-       </em>
+       <ErrorMessage message="could not start session on server" />
     {/await}
  {:else}
    <ThanksBye done={taskDone} />
@@ -104,7 +103,5 @@
 {/if}
 
 <style>
-
-
 
 </style>

@@ -53,8 +53,6 @@
 
 <!--
 
-* exponential back-off
-* saving and error components
 * save data: test with simulation of flaky server connection
 * typingWarningLevel
 * filter out repeat keystrokes
