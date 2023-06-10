@@ -53,10 +53,8 @@
 
 <!--
 
-* explicitly don't save keystrokes outside green period
-* can at least start countdown w/ save promises unresolved
-* data lost if Esc?
 * exponential back-off
+* saving and error components
 * save data: test with simulation of flaky server connection
 * typingWarningLevel
 * filter out repeat keystrokes

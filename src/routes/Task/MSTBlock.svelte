@@ -4,7 +4,9 @@
     import Countdown from './Countdown.svelte';
     import Blank from './Blank.svelte';
     import MSTTrial from './MSTTrial.svelte';
+    import Function from './Function.svelte';
     import { getTrialId } from '../db.js';
+    import { wait, waitSec } from './utils.js';
 
     export let done;
     export let countdownSeconds = 30;
@@ -13,29 +15,38 @@
     export let beep;
     export let sessionId;
 
-    let promise;
+    let trialIdPromise;
     onMount( () => { 
-        promise = getTrialId(sessionId, blockNumber);
+        trialIdPromise = getTrialId(sessionId, blockNumber);
     });
 
-    let isCountdownDone = false;
-    function countdownDone() {
-       isCountdownDone = true;
-    }
-
-
+    let promiseHolder = { 'savePromises' : Promise.all([]) };
 </script>
 
 
-{#if (!isCountdownDone) }        
-    <Countdown {countdownSeconds} done={countdownDone} beep={beep} />
-{:else}
-     {#await promise}
+{#await waitSec(countdownSeconds) }        
+    <Countdown {countdownSeconds} beep={beep} />
+{:then countdownDone}
+     {#await trialIdPromise}
         <Blank color={"red"} />
      {:then trialId}
-        <MSTTrial seconds={onSeconds} {done} {blockNumber} trialId={trialId['id']} />
+        {#await waitSec(onSeconds) }
+            <MSTTrial {promiseHolder} {blockNumber} trialId={trialId['id']} />
+        {:then timerDoneness}
+           {#await promiseHolder['savePromises']}
+               <em>saving...</em>
+           {:then savesDone}
+                <Function func={done} />
+           {:catch error}
+             <em>
+                An error has occurred.
+                 Please hit the Esc key to exit the task,
+                 and notify study staff.
+             </em>
+           {/await}
+        {/await}
      {:catch error}
         <em> ERROR: {error.message} </em>
      {/await}
-{/if}
+{/await}
 

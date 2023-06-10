@@ -1,28 +1,23 @@
 <script>
-    export let seconds = 30;
-    export let done;
     export let maxDots = 12;
     export let sequence = "41324";
     export let blockNumber;
     export let trialId;
+    export let promiseHolder;
 
-    import { onDestroy } from 'svelte';
+    import { onDestroy, tick } from 'svelte';
     import Function from './Function.svelte';
-    import { onInterval, range } from './utils.js';
+    import { onInterval, range, wait, waitSec } from './utils.js';
     import { sendKeystrokes } from '../db.js';
-
-    const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    const waitSec = (sec) => wait(sec*1000);
 
     let width;
     let height;
     $: dotWidth = (width/maxDots);
 
-    let savePromises = Promise.all([]);
     function processKeystrokes() {
         if (newKeys.length) {
           let newPromise = saveKeystrokes(receiptCounter++, newKeys);
-          savePromises = Promise.all([savePromises, newPromise]);
+          promiseHolder['savePromises'] = Promise.all([promiseHolder['savePromises'], newPromise]);
           newKeys = [];
         }
     }
@@ -30,7 +25,8 @@
         processKeystrokes();
     }, 5000);
     onDestroy( () => {
-        processKeystrokes();     
+        processKeystrokes();
+        promiseHolder['savePromises'] = Promise.all([promiseHolder['savePromises'], tick()]);
     });
 
     let newKeys = [];
@@ -75,7 +71,6 @@
 
 <svelte:window on:keydown={handleKeydown}/>
 
-{#await waitSec(seconds)}
   <div bind:clientWidth={width} bind:clientHeight={height} >
     {#if dotWidth}
       <svg>
@@ -90,21 +85,6 @@
        </svg>
     {/if}
   </div>
-{:then timerDoneness}
-   <div class="stop" >
-     {#await savePromises}
-        <em>saving...</em>
-     {:then savesDones}
-        <Function func={done} />
-     {:catch error}
-        <em>
-           An error has occurred.
-           Please hit the Esc key to exit the task,
-           and notify study staff.
-       </em>
-     {/await}
-   </div>
-{/await}
 
 <style>
 
@@ -112,10 +92,6 @@ div {
    height: 100%;
    background-color: green;
    padding: 0px;
-}
-
-.stop {
-   background-color: red;
 }
 
 svg {

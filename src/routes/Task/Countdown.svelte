@@ -1,7 +1,7 @@
 <script>
     export let sequence = "41324";
     export let countdownSeconds = 30;
-    export let done;
+    export let done = () => {};
     export let beep;
 
     import { onInterval } from './utils.js';
@@ -48,7 +48,7 @@
     onInterval( () => {
          if (countdownSecondsRemaining > 0) {
            countdownSecondsRemaining--;
-           if (countdownSecondsRemaining < 3) {
+           if (countdownSecondsRemaining < 4) {
               beep.play();
            }
         }
@@ -66,7 +66,7 @@
       <text fill="white" x={width/2} y={height/4} text-anchor="middle" >
          {sequence}
       </text>
-      {#if countdownSecondsRemaining >= 3}
+      {#if countdownSecondsRemaining >= 4}
          <text fill="white" x={width/2} y={height/2} text-anchor="middle" >
            {numberWords[countdownSecondsRemaining]}
          </text>
