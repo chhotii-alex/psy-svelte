@@ -53,11 +53,10 @@
 
 <!--
 
-* save data: test with simulation of flaky server connection
-* typingWarningLevel
-* filter out repeat keystrokes
+* deployment                            
 * output classic spreadsheet format report
 * email DM about issues
+* typingWarningLevel
 * code refactoring
 * to-do's from old Cat Chu code
 

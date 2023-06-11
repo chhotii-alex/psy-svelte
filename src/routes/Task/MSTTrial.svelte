@@ -36,6 +36,9 @@
     let direction = 1;
     
     function handleKeydown(event) {
+       if (event.repeat) {
+          return;
+       }
        newKeys.push( { 'key' : event.key, 'timeStamp' : event.timeStamp });
        nDots += direction;
        if (nDots >= maxDots) {
