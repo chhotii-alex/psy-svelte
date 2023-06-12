@@ -1,6 +1,7 @@
 /* All server communication routines here. */
 
-const urlBase = 'http://127.0.0.1:5000/';
+//const urlBase = 'http://127.0.0.1:5000/';
+const urlBase = 'https://octopus-app-8dfwr.ondigitalocean.app/';
 
 export async function validateAccessToken(accessTokenLongEnough, accessToken) {
         if (!accessTokenLongEnough) {
