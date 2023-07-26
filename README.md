@@ -4,11 +4,8 @@ Re-creating the classic Sleep and Cognition task(s) using the latest and greates
 Currently implments the Motor Sequence Task; hoping to generalize common elements to support the implementation
 of a wide range of tasks.
 
-This repo just contains the front end (what runs in the subject's browser). There has to also be a back-end to 
-(at a minimum) communicate with the database to store responses. The front end can be compiled into a set of 
-static files that can be hosted on Apache (i.e. nothing has to happen on the host other than to serve the files);
-useful in the sadly common case that folks are stuck with old-timey consumer-grade web hosting platforms. See
-https://github.com/chhotii-alex/antigen-sensitivity for details. A back-end is provided in a separate repo.
+This is a full-stack Svelte implementation; there are routes for api endpoints, which run on the server and communicate
+with the database.
 
 # Original svelte template README:
 # create-svelte

@@ -1,14 +1,15 @@
-/* All server communication routines here. */
+/* All client-to-server (api-calling) routines here. */
 
+const urlBase = '/api/';
 //const urlBase = 'http://127.0.0.1:5000/';
-const urlBase = 'https://octopus-app-8dfwr.ondigitalocean.app/';
+//const urlBase = 'https://octopus-app-8dfwr.ondigitalocean.app/';
 
 export async function validateAccessToken(accessTokenLongEnough, accessToken) {
         if (!accessTokenLongEnough) {
            return false;
         }
         accessToken = accessToken.trim();
-        const url = `${urlBase}checkToken`;
+    const url = `${urlBase}checkToken`;
         const data = { 'access_token' : accessToken };
         const response = await fetch(url, {
            method: "POST",
@@ -17,12 +18,14 @@ export async function validateAccessToken(accessTokenLongEnough, accessToken) {
           },
           body: JSON.stringify(data)
        });
-       const j = await response.json();
+    const j = await response.json();
+    console.log("Got data in response: ", j);
        if (j['token'] != accessToken) {
           throw new Error("Glitch! Error code: 101");
        }
-       return j['isValid'];
+    return j['isValid'];
 }
+
 
 export async function getSessionId(accessToken) {
        const url = `${urlBase}session`;
